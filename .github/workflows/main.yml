@@ -1,0 +1,29 @@
+name: Run Stock Scanner
+on:
+  schedule:
+    - cron: '0 9 * * 1' # Runs every Monday at 9:00 AM
+  workflow_dispatch: # Allows you to run it manually with one click
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v3
+
+      - name: Set up Python
+        uses: actions/setup-python@v4
+        with:
+          python-version: '3.10'
+
+      - name: Install dependencies
+        run: pip install -r requirements.txt
+
+      - name: Run scanner
+        run: python main.py
+
+      - name: Upload results
+        uses: actions/upload-artifact@v3
+        with:
+          name: scanner-results
+          path: allocator_quality_scan.csv
